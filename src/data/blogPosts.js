@@ -1,6 +1,5 @@
 /**
- * blogPosts.js — Lista resumida de artículos de la parrilla del blog.
- *
+ * blogPosts.js — Lista resumida de los artículos de la parrilla del blog.
  */
 export const BLOG_POSTS = [
   {

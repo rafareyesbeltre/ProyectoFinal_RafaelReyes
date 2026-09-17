@@ -1,21 +1,20 @@
 /**
- * NavBar.jsx — Barra de navegación principal compartida por todas las vistas.
+ * NavBar.jsx — Barra de navegación principal, compartida por todas las vistas.
  *
- * Los 5 enlaces estáticos (Blog, Archives, Community, Newsletter, About Us)
- * se unifican en 4 rutas de la SPA: "Blog" absorbe Archives de la web original.
- * Por eso el item "Blog" apunta a "/" y tiene end=true (solo se marca activo
- * en la raíz y no en subrutas como /blog/:id).
+ * El menú tiene 4 enlaces (Blog, Community, Newsletter, About Us). "Blog" apunta
+ * a "/" y usa end=true: solo se marca como activo en la raíz, no en subrutas
+ * como /blog/:id.
  *
- * El header sigue SIEMPRE el tema global (ThemeContext): en claro es blanco y
- * en oscuro lo oscurecen los overrides html[data-theme="dark"] de style.css.
+ * El header sigue SIEMPRE el tema global (ThemeContext): en claro es blanco y en
+ * oscuro lo oscurecen los overrides html[data-theme="dark"] de style.css.
  */
 
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useTheme } from "../hooks/useTheme";
 
-// Mapa de enlaces: `end` indica si el enlace solo está activo cuando la ruta
-// coincide de forma exacta (necesario para "/").
+// Lista de enlaces; `end` indica si el enlace solo está activo con la ruta
+// exacta (necesario para "/").
 const NAV_ITEMS = [
   { to: "/", label: "Blog", end: true },
   { to: "/comunidad", label: "Community", end: false },
@@ -24,19 +23,17 @@ const NAV_ITEMS = [
 ];
 
 export default function NavBar() {
-  // Controla el menú hamburguesa en móviles (clase mobile-menu-open del header).
+  // Controla el menú hamburguesa en móviles (añade mobile-menu-open al header).
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Tema global (Context API, Tema 8): toggleTheme alterna light/dark.
+  // El tema global (Tema 8): toggleTheme alterna entre claro y oscuro.
   const { theme, toggleTheme } = useTheme();
   const isDarkTheme = theme === "dark";
 
-  // Clase condicional del header según el menú abierto;
-  // filter(Boolean) descarta las cadenas vacías antes de unirlas.
+  // Clase condicional del header según el estado del menú.
   const headerClass = menuOpen ? "mobile-menu-open" : "";
 
-  // NavLink recibe esta función para calcular sus clases: recibe un objeto
-  // { isActive } y devuelve la clase correspondiente.
+  // Esta función le da a NavLink la clase a usar: "active" solo si está pulsado.
   function linkClassName({ isActive }) {
     return ["nav-link", isActive ? "active" : ""].join(" ").trim();
   }
@@ -44,7 +41,7 @@ export default function NavBar() {
   return (
     <header className={headerClass}>
       <div className="container">
-        {/* Logotipo: toda la palabra/marca enlaza siempre a la home ("/"). */}
+        {/* Logotipo: la marca enlaza siempre a la página principal. */}
         <Link to="/" className="logo">
           <div className="logo-icon">&lt;/&gt;</div>
           <div className="logo-text">
@@ -68,7 +65,7 @@ export default function NavBar() {
         </nav>
 
         <div className="header-actions">
-          {/* Toggle de tema claro/oscuro (dato global del ThemeContext). */}
+          {/* Interruptor de tema claro/oscuro (estado global de la app). */}
           <button
             type="button"
             className={`theme-toggle-btn${isDarkTheme ? " theme-toggle-btn-dark" : ""}`}
@@ -78,13 +75,13 @@ export default function NavBar() {
           >
             {isDarkTheme ? "☀️" : "🌙"}
           </button>
-          {/* CTA de Discord (enlace externo placeholder igual que el estático). */}
+          {/* Botón de Discord (enlace externo de ejemplo). */}
           <a href="#" className="btn btn-primary">
             Discord
           </a>
         </div>
 
-        {/* Toggle hamburguesa: alterna la clase mobile-menu-open del header. */}
+        {/* Botón hamburguesa: abre y cierra el menú móvil. */}
         <button
           className="mobile-toggle"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}

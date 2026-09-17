@@ -11,22 +11,22 @@
   --font-heading: 'Rubik', sans-serif;
   --font-text: 'Roboto Mono', monospace;
 
-  /* Mapeos por defecto para asimilación inmediata */
+  /* Conjunto de fuentes listas para usar */
   --font-sans: var(--font-heading);
   --font-display: var(--font-title);
   --font-mono: var(--font-text);
 
   /* Paleta cromática */
-  --color-primary: #00ffe5;      /* Cyan brillante */
+  --color-primary: #00ffe5;      /* Cian brillante */
   --color-primary-hover: #00e0ca;
   --color-primary-light: rgba(0, 255, 229, 0.1);
-  --color-secondary: #4B1AEB;    /* Purple brillante */
-  --color-tertiary: #27272A;     /* Dark slate gray / Zinc */
+  --color-secondary: #4B1AEB;    /* Púrpura brillante */
+  --color-tertiary: #27272A;     /* Gris pizarra oscuro / Zinc */
   --color-accent: var(--color-primary);
-  --color-success: #10b981;      /* Emerald */
-  --color-dark: #111827;         /* Charcoal */
+  --color-success: #10b981;      /* Esmeralda */
+  --color-dark: #111827;         /* Carbón */
   --color-dark-soft: var(--color-tertiary);
-  --color-light: #f9fafb;        /* Off-white */
+  --color-light: #f9fafb;        /* Blanco roto */
   --color-border: #e5e7eb;
   --color-muted: #6b7280;
 
@@ -34,7 +34,7 @@
   --container-max-width: 1240px;
   --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Radios de borde (escala unificada) */
+  /* Redondeo de las esquinas (escala compartida) */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-base: 8px;
@@ -245,12 +245,12 @@ header .container {
   border: none;
   cursor: pointer;
   transition: var(--transition-smooth);
-  text-decoration: none; /* Remueve de forma absoluta el subrayado */
+  text-decoration: none; /* Quita el subrayado del enlace */
 }
 
 .btn-primary {
   background-color: var(--color-primary);
-  color: #111827; /* Dark charcoal text for perfect readability on cyan background */
+  color: #111827; /* Texto oscuro para que se lea bien sobre el fondo cian */
   box-shadow: 0 4px 10px rgba(0, 255, 229, 0.15);
 }
 
@@ -642,7 +642,7 @@ header .container {
   flex-direction: column;
   gap: 2px;
   position: sticky;
-  top: 100px; /* Modificado para coexistir con el header pegajoso de DevAcademy */
+  top: 100px; /* Baja el índice para que el header fijo no lo tape */
   align-self: flex-start;
   background-color: #ffffff;
   border-radius: var(--radius-lg);
@@ -735,7 +735,7 @@ header .container {
 .anchor-span {
   display: block;
   position: absolute;
-  top: -120px; /* Compensación del header de DevAcademy */
+  top: -120px; /* Sube el ancla para que el header no tape el título al saltar */
   visibility: hidden;
   pointer-events: none;
 }

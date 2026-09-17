@@ -1,8 +1,8 @@
 /**
- * useBookmarks.js — Hook público para consumir el contexto de favoritos.
+ * useBookmarks.js — El gancho para leer los favoritos desde cualquier lugar.
  *
- * Cualquier componente o página dentro de <BookmarksProvider /> puede llamar
- * a este hook para leer la lista de marcadores o alternar un favorito.
+ * Cualquier componente o página que viva dentro de <BookmarksProvider /> puede
+ * usarlo para consultar la lista de marcadores o alternar un favorito.
  */
 
 import { useContext } from "react";
@@ -11,8 +11,8 @@ import { BookmarksContext } from "../context/BookmarksContext";
 export function useBookmarks() {
   const context = useContext(BookmarksContext);
 
-  // Si no hay proveedor, el contexto es null: fallamos de forma explícita y
-  // rápida en lugar de devolver undefined y generar errores confusos.
+  // Fuera del proveedor el contexto es null; mejor avisar con un error claro
+  // que fallar de forma rara más adelante.
   if (!context) {
     throw new Error("useBookmarks debe usarse dentro de BookmarksProvider");
   }

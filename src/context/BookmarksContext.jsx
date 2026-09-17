@@ -1,11 +1,11 @@
 /**
- * BookmarksContext.jsx — Definición del contexto de favoritos.
+ * BookmarksContext.jsx — Contexto de favoritos.
  *
- * Este archivo SOLO crea y exporta el objeto contexto.
+ * Este archivo solo crea y exporta el objeto de contexto.
  */
 
 import { createContext } from "react";
 
-// Valor inicial null: cualquier consumo fuera de <BookmarksProvider />
-// detectará que no hay proveedor y lanzará un error controlado (ver useBookmarks).
+// Empieza en null: si algo intenta usarlo fuera del proveedor, useBookmarks
+// lanza un error avisando de que no existe.
 export const BookmarksContext = createContext(null);

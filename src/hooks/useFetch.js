@@ -1,24 +1,24 @@
 /**
- * useFetch.js — Custom hook genérico de peticiones asíncronas (Tema 6).
+ * useFetch.js — Hook para cargar datos de forma asíncrona (Tema 6).
  *
- * Centraliza el ciclo de vida básico de cualquier "fetch" del proyecto y
- * expone los 3 estados exigidos en el Tema 5:
+ * Centraliza el ciclo de vida de cualquier petición del proyecto y expone los
+ * 3 estados pedidos en el Tema 5:
  *
  *   const { data, loading, error, refetch } = useFetch(fetchBlogPosts);
  *
- *   - data:    resultado resuelto de la Promesa (null mientras se carga).
- *   - loading: true desde el inicio hasta que la Promesa termina.
- *   - error:   el Error en caso de fallo (null en el resto de casos).
- *   - refetch: función para relanzar la petición (botones "Reintentar").
+ *   - data:    el resultado de la Promesa (null mientras carga).
+ *   - loading: true desde que empieza hasta que termina.
+ *   - error:   el error ocurrido (null si todo va bien).
+ *   - refetch: función para volver a pedir (botones "Reintentar").
  *
- * Detalles de implementación:
- *   - La fetcher se guarda en un ref, así el efecto no depende de su identidad
- *     (que cambiaría en cada render) y el hook no "vuelve a pedir" sin motivo.
- *   - El efecto depende de `tick` (incrementado por refetch) y de las
- *     dependencias reales pasadas por el llamante (p. ej. el id del artículo);
- *     así la petición se relanza al cambiar la URL sin desmontarse.
- *   - Un flag interno evita actualizar estado de una petición cancelada
- *     (salir de la página mientras la Promesa sigue pendiente).
+ * Detalles:
+ *   - La función de petición vive en un ref, así el efecto no depende de su
+ *     identidad (que cambia en cada render) y no se vuelve a pedir sin motivo.
+ *   - El efecto depende de `tick` (lo aumenta refetch) y de las dependencias
+ *     que pasa el llamante (p. ej. el id del artículo); así la petición se
+ *     relanza al cambiar la URL sin desmontarse.
+ *   - Un flag interno evita actualizar el estado de una petición que ya no
+ *     interesa (p. ej. si el usuario sale de la página antes de que termine).
  *
  * @param {Function} fetchFn — función que devuelve una Promesa.
  * @param {Array} [deps=[]] — dependencias que deben relanzar la petición.
@@ -27,7 +27,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useFetch(fetchFn, deps = []) {
-  // Ref con la última función de petición (siempre actual, nunca en deps).
+  // La última función de petición, guardada para no depender de su identidad.
   const fetchFnRef = useRef(fetchFn);
   fetchFnRef.current = fetchFn;
 
@@ -35,21 +35,20 @@ export function useFetch(fetchFn, deps = []) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // "tick" es un contador: refetch() lo incrementa y el efecto se relanza.
+  // Un contador: refetch() lo aumenta y el efecto vuelve a pedir.
   const [tick, setTick] = useState(0);
 
-  // refetch estable por identidad (no provoca re-renders por sí misma).
+  // refetch no cambia entre renders, así no provoca repintados por sí sola.
   const refetch = useCallback(() => setTick((t) => t + 1), []);
 
-  // Petición principal. `deps` extras (como [id]) vuelven a lanzarla cuando
-  // cambian; `tick` la relanza también desde refetch.
+  // La petición principal: las `deps` extra (como [id]) la relanzan al cambiar,
+  // y `tick` hace lo mismo desde refetch.
   useEffect(() => {
-    let active = true; // false al desmontar o al relanzar → ignora la respuesta.
+    let active = true; // Se desactiva al desmontar o relanzar para ignorar la respuesta vieja.
 
     setLoading(true);
     setError(null);
-    // No se guarda la Promise para no disparar avisos de lint; el .catch
-    // convierte el fallo en el estado `error` del hook.
+    // No se guarda la promesa; el .catch pasa el fallo al estado `error`.
     fetchFnRef.current()
       .then((payload) => {
         if (!active) return;
@@ -62,7 +61,7 @@ export function useFetch(fetchFn, deps = []) {
         setLoading(false);
       });
 
-    // Cleanup: marca la petición como inactiva si cambia deps o se desmonta.
+    // Al limpiar, la petición se marca como inactiva (cambió la pantalla o se salió).
     return () => {
       active = false;
     };

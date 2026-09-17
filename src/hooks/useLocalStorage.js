@@ -1,19 +1,19 @@
 /**
- * useLocalStorage.js — Custom hook de estado sincronizado con localStorage
- * (ejemplo típico citado en el Tema 6: useLocalStorage).
+ * useLocalStorage.js — Hook de estado que se guarda en localStorage
+ * (el ejemplo típico que se cita en el Tema 6).
  *
- * API idéntica a useState:
+ * Se usa igual que useState:
  *
  *   const [theme, setTheme] = useLocalStorageState("coffee_end_theme", "light");
  *
- *   - Al leer por primera vez, inicializa desde localStorage (si existe) o
- *     con defaultValue (se admite también un inicializador perezoso).
- *   - Cada cambio se persiste automáticamente en la clave indicada.
+ *   - La primera vez lee lo que haya guardado (o usa el valor por defecto;
+ *     también acepta una función que lo devuelva).
+ *   - Cada cambio se guarda solo en la clave indicada.
  *   - Si la clave cambia en un componente que NO se desmonta (p. ej. el id de
- *     un artículo en la misma ruta), el estado se re-inicializa con el valor
- *     de la nueva clave en lugar de reutilizar el anterior.
- *   - Todo el acceso va envuelto en try/catch para no romper la app si
- *     localStorage no está disponible (p. ej. render en Node/SSR).
+ *     un artículo dentro de la misma ruta), el estado se relee con la nueva
+ *     clave en lugar de arrastrar el valor anterior.
+ *   - Todo el acceso va protegido con try/catch para no romper la app si el
+ *     almacenamiento no está disponible (p. ej. render en Node/SSR).
  *
  * @param {string} key — clave usada en localStorage.
  * @param {*} defaultValue — valor por defecto (o función que lo devuelve).
@@ -21,29 +21,28 @@
 
 import { useEffect, useState } from "react";
 
-// Lee y parsea el valor guardado; devuelve null si no existe o no se puede leer.
+// Lee y descifra el valor guardado; null si no existe o no se puede leer.
 function readStored(key) {
   try {
     const raw = localStorage.getItem(key);
     if (raw !== null) return JSON.parse(raw);
   } catch {
-    // JSON corrupto o almacenamiento no disponible → se ignora.
+    // JSON dañado o sin almacenamiento: se ignora y se usa el valor por defecto.
   }
   return null;
 }
 
 export function useLocalStorageState(key, defaultValue) {
-  // Inicializador perezoso: solo se ejecuta una vez en el primer render.
+  // Solo corre una vez, en el primer render.
   const [value, setValue] = useState(() => {
     const stored = readStored(key);
     if (stored !== null) return stored;
     return typeof defaultValue === "function" ? defaultValue() : defaultValue;
   });
 
-  // Reset derivado de estado (patrón oficial de React): si la clave cambia
-  // (p. ej. al navegar entre /blog/art_1 y /blog/art_2, donde DetallePage NO
-  // se desmonta), el estado se vuelve a leer desde la NUEVA clave. Sin esto,
-  // los comentarios de un artículo se "filtrarían" al siguiente.
+  // Si la clave cambia (p. ej. al pasar de /blog/art_1 a /blog/art_2, donde la
+  // página no se desmonta), el estado se vuelve a leer con la nueva clave; así
+  // los comentarios de un artículo no pasan al siguiente.
   const [prevKey, setPrevKey] = useState(key);
   if (prevKey !== key) {
     setPrevKey(key);
@@ -54,12 +53,12 @@ export function useLocalStorageState(key, defaultValue) {
     });
   }
 
-  // Persiste el valor cada vez que cambia (efecto de "ciclo de vida").
+  // Con cada cambio, se guarda el valor en localStorage.
   useEffect(() => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch {
-      // Almacenamiento no disponible: se sigue funcionando en memoria.
+      // Sin almacenamiento se sigue trabajando en memoria.
     }
   }, [key, value]);
 

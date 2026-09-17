@@ -1,16 +1,15 @@
 /**
  * ComunidadPage.jsx — Página "/comunidad".
  *
- * La sección responde al tema global (toggle): en claro usa fondo y tarjetas
- * claras y en oscuro recupera el gradiente original (html[data-theme="dark"]
- * en style.css). El resto es maquetado estático portado tal cual del estático.
+ * La sección sigue el tema global: en claro usa fondo y tarjetas claras, y en
+ * oscuro recupera el gradiente (html[data-theme="dark"] en style.css).
  */
 
 import { useEffect } from "react";
 
 export default function ComunidadPage() {
 
-  // Título de pestaña específico de esta página.
+  // Título de la pestaña para esta página.
   useEffect(() => {
     document.title = "// Comunidad — Coffee-End";
   }, []);
@@ -31,7 +30,7 @@ export default function ComunidadPage() {
             </p>
           </div>
 
-          {/* Tarjeta: beneficios (izquierda) + estadísticas y CTA (derecha). */}
+          {/* Tarjeta con los beneficios y, a la derecha, las estadísticas y el botón. */}
           <div className="comunidad-discord__tarjeta">
             <div className="comunidad-discord__columna-info">
               <h2 className="comunidad-discord__subtitulo">¿Qué vas a encontrar dentro?</h2>
@@ -69,7 +68,7 @@ export default function ComunidadPage() {
                 <span className="comunidad-discord__estado-miembros">● 8.420 Miembros</span>
               </div>
 
-              {/* CTA externo real de Discord (target blank + rel por seguridad). */}
+              {/* Acceso directo a Discord (se abre en una pestaña nueva). */}
               <a href="https://discord.com" target="_blank" rel="noreferrer" className="comunidad-discord__enlace-unirse">
                 💬 Ingresar al Servidor de Discord
               </a>

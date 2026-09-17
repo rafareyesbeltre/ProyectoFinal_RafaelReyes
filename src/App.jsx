@@ -1,23 +1,21 @@
 /**
- * App.jsx — Componente raíz de la aplicación.
+ * App.jsx — Raíz de la aplicación.
  *
- * Estructura:
- *   App (exportado)      → envuelve todo en <ThemeProvider />.
- *   AppContent (interno) → vive DENTRO del provider, por lo que ya puede
- *                          consumir el ThemeContext (useTheme) y compone el
- *                          layout compartido:
- *                            <NavBar /> → navegación fija.
- *                            <Routes /> → enrutado de la SPA.
- *                            <Footer /> → pie compartido.
+ * App (exportado)      → envuelve toda la app en el <ThemeProvider />.
+ * AppContent (interno) → vive dentro de ese proveedor para poder leer el tema
+ *                        global (useTheme) y arma el layout compartido:
+ *                          <NavBar /> → navegación fija.
+ *                          <Routes /> → las rutas de la SPA.
+ *                          <Footer /> → pie compartido.
  *
  * Proveedores de estado global (Context API, Tema 8):
- *   <ThemeProvider />     → dato global "tema claro/oscuro" (toggle en NavBar).
- *   <BookmarksProvider /> → favoritos con persistencia en localStorage.
+ *   <ThemeProvider />     → tema claro/oscuro (interruptor en la barra).
+ *   <BookmarksProvider /> → favoritos guardados en localStorage.
  *
- * La separación App/AppContent es necesaria: leer el ThemeContext requiere un
- * componente descendiente del proveedor, y App es precisamente quien lo monta.
- * Todas las vistas (incluidas /comunidad y /newsletter) siguen el tema global:
- * el header, el footer y cada sección responden al data-theme del toggle.
+ * Separo App y AppContent porque solo un componente que vive dentro del
+ * proveedor puede leer su contexto, y App es quien lo monta. Todas las vistas
+ * (incluidas /comunidad y /newsletter) siguen el tema elegido: el header, el
+ * footer y cada sección cambian con el data-theme del interruptor.
  */
 
 import { Route, Routes } from "react-router-dom";
@@ -32,20 +30,20 @@ import Pagina404 from "./pages/Pagina404";
 import ThemeProvider from "./context/ThemeProvider";
 import BookmarksProvider from "./context/BookmarksProvider";
 
-// Layout real de la aplicación (consumidor del ThemeContext).
+// Layout compartido de toda la app (ya puede leer el tema elegido).
 function AppContent() {
   return (
     <BookmarksProvider>
       <NavBar />
       <Routes>
-        {/* Página principal: listado de artículos + artículo destacado. */}
+        {/* La página de inicio: lista de artículos + artículo destacado. */}
         <Route path="/" element={<HomePage />} />
-        {/* Detalle de artículo: blog.html?id=... pasa a ser /blog/:id */}
+        {/* La ficha de un artículo concreto. */}
         <Route path="/blog/:id" element={<DetallePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/comunidad" element={<ComunidadPage />} />
         <Route path="/newsletter" element={<NewsletterPage />} />
-        {/* Cualquier ruta no definida renderiza la página 404. */}
+        {/* Cualquier ruta que no exista carga la página 404. */}
         <Route path="*" element={<Pagina404 />} />
       </Routes>
       <Footer />

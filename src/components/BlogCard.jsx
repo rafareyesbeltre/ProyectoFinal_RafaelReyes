@@ -1,10 +1,9 @@
 /**
  * BlogCard.jsx — Tarjeta resumen de un artículo.
  *
- * Reutilizable tanto en la home (rejilla principal) como en cualquier otra
- * vista que liste posts. Replica el <article> generado en archive.html:
- * imagen + tag de categoría, metadatos (autor/fecha), título, extracto,
- * tiempo de lectura, botón "Leer" y el marcador de favorito (🔖/⭐).
+ * Se reutiliza en la página principal y en cualquier otra vista que liste
+ * artículos. Muestra imagen + etiqueta de categoría, autor y fecha, título,
+ * extracto, tiempo de lectura, botón "Leer" y el marcador de favorito (🔖/⭐).
  */
 
 import { Link } from "react-router-dom";
@@ -12,15 +11,15 @@ import { useBookmarks } from "../hooks/useBookmarks";
 import { getTagInfo } from "../utils/articleUtils";
 
 export default function BlogCard({ post }) {
-  // Lee del contexto global si este post está marcado y el toggle para cambiarlo.
+  // Consulta si este artículo está en favoritos y el interruptor para cambiarlo.
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const bookmarked = isBookmarked(post.id);
 
-  // Clases del tag (CSS/HTML/JS/CARRERA) según la categoría del post.
+  // Etiqueta (CSS/HTML/JS/Carrera) que corresponde a la categoría del artículo.
   const tag = getTagInfo(post.category);
 
   return (
-    // id y data-category se conservan por compatibilidad con el estático.
+    // El id y data-category ayudan a filtrar las tarjetas por categoría.
     <article
       className="blog-card blog-card-element"
       id={`card_${post.id}`}
@@ -43,7 +42,7 @@ export default function BlogCard({ post }) {
           <span>{post.date}</span>
         </div>
         <h3 className="blog-card-title-heading">{post.title}</h3>
-        {/* El extracto se muestra entre comillas como en el diseño original. */}
+        {/* El extracto se muestra entre comillas. */}
         <p className="blog-card-desc-paragraph">"{post.excerpt}"</p>
 
         <div className="blog-card-footer-bar">
@@ -51,13 +50,13 @@ export default function BlogCard({ post }) {
             ⏱ {post.readTime} lect.
           </span>
           <div className="display-flex gap-2">
-            {/* Enlace interno del React Router hacia el detalle del artículo. */}
+            {/* Enlace interno hacia la ficha completa del artículo. */}
             <Link to={`/blog/${post.id}`} className="btn blog-card-read-btn">
               Leer
             </Link>
 
-            {/* Toggle de favorito: alterna el id del post y pinta el icono +
-                estilos inline según el estado (igual que renderArticles() de blog.js). */}
+            {/* Botón de favorito: guarda o quita el artículo y ajusta el icono
+                y los colores según el estado. */}
             <button
               type="button"
               className="bookmark-btn-custom bookmark-btn-custom-styled"

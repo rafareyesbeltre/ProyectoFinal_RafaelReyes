@@ -1,18 +1,16 @@
 /**
- * articleUtils.js — Utilidades de presentación para artículos.
+ * articleUtils.js — Utilidades de presentación para los artículos.
  *
- * Concentra la lógica "visual" que en el estático vivía esparcida en
- * js/blog.js y js/articulo.js: colores de badge por categoría y las clases
- * CSS de los tags de tarjeta.
+ * Reúne aquí la lógica visual: los colores del badge por categoría en el
+ * detalle y las clases CSS de la etiqueta de cada tarjeta.
  */
 
 /**
- * Estilos inline del badge de categoría del detalle de artículo.
- * Replica el mapeo de fetchAndLoadArticle() en js/articulo.js:
- *   - CSS  → fondo/acento primario
- *   - HTML → verde (éxito)
- *   - JS   → ámbar (acento)
- *   - resto → gris (muted)
+ * Colores del badge de categoría que se aplican en el detalle del artículo.
+ *   - CSS  → tono principal
+ *   - HTML → verde
+ *   - JS   → ámbar
+ *   - resto → gris
  */
 export function getCategoryBadgeStyle(category) {
   if (category.includes("CSS")) {
@@ -28,13 +26,12 @@ export function getCategoryBadgeStyle(category) {
 }
 
 /**
- * Clases CSS y etiqueta del tag pintado sobre la imagen de cada tarjeta.
- * El estático usaba, por categoría: blog-tag-css, blog-tag-html,
- * blog-tag-js y blog-tag-career.
+ * Clase CSS y etiqueta del texto que va sobre la imagen de cada tarjeta:
+ * blog-tag-css, blog-tag-html, blog-tag-js y blog-tag-career.
  *
- * previewBadgeClass es la variante de las tarjetas "Recomendados" del
- * detalle (el CSS solo define blog-preview-badge-* para CSS/HTML/JS; por eso
- * Carrera devuelve cadena vacía y en ese caso no se pinta badge).
+ * previewBadgeClass es la variante de las tarjetas "Recomendados" del detalle
+ * (el CSS solo define blog-preview-badge-* para CSS/HTML/JS; por eso Carrera
+ * devuelve una cadena vacía y en ese caso no se pinta el badge).
  */
 export function getTagInfo(category) {
   if (category === "CSS") {

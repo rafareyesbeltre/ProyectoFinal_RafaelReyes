@@ -1,26 +1,25 @@
 /**
- * CommentsSection.jsx — Sección de comentarios (presentacional, memoizada).
+ * CommentsSection.jsx — Sección de comentarios de cada artículo.
  *
- * Demuestra varios temas de la rúbrica a la vez:
- *   - lifting state up (Tema 4): el texto escrito es estado LOCAL del form,
- *     pero añadir/eliminar comentarios llama a callbacks del padre
- *     (onAddComment / onDeleteComment).
- *   - Eventos (Tema 3): texto controlado con onChange, envío con onSubmit,
+ * Sirve para mostrar varios logros del curso:
+ *   - Lifting state up (Tema 4): el texto que se escribe es estado local del
+ *     form, mientras que añadir y borrar comentarios lo hace la página.
+ *   - Eventos (Tema 3): texto controlado con onChange, envío con onSubmit y
  *     borrado con onClick.
- *   - Listas dinámicas (Tema 2): render con .map() y prop key única.
+ *   - Listas (Tema 2): se pintan con .map() y una key única.
  *
- * Se envuelve en React.memo + el padre usa useCallback en los handlers:
- * como las props de función mantienen identidad estable, React puede evitar
- * re-renderizar la sección cuando cambia cualquier otro estado del artículo.
+ * Está envuelta en React.memo y la página usa useCallback en las funciones:
+ * como las props que recibe no cambian de identidad, React evita repintar la
+ * sección cuando cambia cualquier otro dato del artículo.
  */
 
 import { memo, useState } from "react";
 
 function CommentsSection({ comments, onAddComment, onDeleteComment }) {
-  // Solo el texto del formulario es estado interno del componente hijo.
+  // El único estado propio es el texto que se está escribiendo.
   const [text, setText] = useState("");
 
-  // Envío del formulario: se "eleva" el texto al padre y se limpia el campo.
+  // Al enviar, se pasa el texto a la página y se vacía el campo.
   function handleSubmit(event) {
     event.preventDefault();
     const trimmed = text.trim();
@@ -32,11 +31,11 @@ function CommentsSection({ comments, onAddComment, onDeleteComment }) {
   return (
     <section className="comments-section">
       <h3 className="comments-count">
-        {/* Comentarios (n): el contador se calcula desde los datos del padre. */}
+        {/* El contador sale de los comentarios que recibe la sección. */}
         Comentarios ({comments.length})
       </h3>
 
-      {/* FORMULARIO: textarea controlado + submit (evento onSubmit). */}
+      {/* El formulario: textarea controlado y envío con onSubmit. */}
       <form className="comments-form" onSubmit={handleSubmit}>
         <textarea
           className="comments-textarea"
@@ -54,7 +53,7 @@ function CommentsSection({ comments, onAddComment, onDeleteComment }) {
         </div>
       </form>
 
-      {/* LISTA (renderizado condicional): mensaje si no hay comentarios. */}
+      {/* Si no hay comentarios se muestra un aviso; si hay, se pintan en una lista. */}
       {comments.length === 0 ? (
         <p className="comments-empty">Sé el primero en dejar un comentario en este artículo.</p>
       ) : (
@@ -71,7 +70,7 @@ function CommentsSection({ comments, onAddComment, onDeleteComment }) {
                 </div>
                 <p className="comment-text">{comment.text}</p>
               </div>
-              {/* Borrado: invoca el callback del padre (que usa .filter()). */}
+              {/* Borrar avisa a la página, que descarta ese comentario de la lista. */}
               <button
                 type="button"
                 className="comment-delete"
@@ -89,6 +88,6 @@ function CommentsSection({ comments, onAddComment, onDeleteComment }) {
   );
 }
 
-// React.memo: solo re-renderiza si cambian los comentarios o las funciones
-// (mantenidas estables con useCallback en el padre).
+// Con React.memo evitamos repintados de más: solo cambia cuando cambian los
+// comentarios o las funciones (que la página mantiene estables con useCallback).
 export default memo(CommentsSection);

@@ -1,19 +1,16 @@
 /**
- * AboutPage.jsx — Página institucional "/about" (antes about.html).
+ * AboutPage.jsx — Página institucional "/about".
  *
  * Dos secciones:
- *   1. Bento-grid de ventajas (why-section, estática, solo HTML/CSS).
- *   2. Acordeón de preguntas frecuentes (FaqAccordion reutilizable),
- *      alimentado por el array FAQ_ITEMS definido aquí abajo.
- *
- * En el estático el acordeón gestionaba la clase active y el max-height con
- * JS manual; ahora lo hace el componente FaqAccordion.
+ *   1. Cuadrícula "bento" con las ventajas de la academia (HTML/CSS fijo).
+ *   2. Acordeón de preguntas frecuentes (FaqAccordion reutilizable), con el
+ *      contenido FAQ_ITEMS definido aquí abajo.
  */
 
 import { useEffect } from "react";
 import FaqAccordion from "../components/FaqAccordion";
 
-// Contenido de las Preguntas Frecuentes (textos literales del estático).
+// Las preguntas frecuentes de la academia.
 const FAQ_ITEMS = [
   {
     q: "¿Qué incluye la academia?",
@@ -58,14 +55,14 @@ const FAQ_ITEMS = [
 ];
 
 export default function AboutPage() {
-  // Título de pestaña específico de esta página.
+  // Título de la pestaña para esta página.
   useEffect(() => {
     document.title = "// About Us — Coffee-End";
   }, []);
 
   return (
     <main>
-      {/* SECCIÓN BENTO: ventajas de la academia (contenido estático). */}
+      {/* Cuadrícula con las ventajas de la academia. */}
       <section className="bento-section" id="about">
         <div className="container">
           <div className="section-header">
@@ -144,7 +141,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* SECCIÓN FAQ: acordeón reutilizable con los items anteriores. */}
+      {/* Preguntas frecuentes, mostradas en el acordeón. */}
       <section className="faq-accordion-section" id="faq-section">
         <div className="container container-faq-custom">
           <div className="section-header faq-header-custom">

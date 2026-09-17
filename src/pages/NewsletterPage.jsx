@@ -1,23 +1,22 @@
 /**
  * NewsletterPage.jsx — Página "/newsletter".
  *
- * Formulario de suscripción con persistencia en localStorage:
- *   - El email guardado se precarga en el input al entrar.
- *   - Al enviar se guarda y se muestra el panel de éxito con una pequeña
- *     transición de opacidad (estado `fading`), igual que el estático.
- * La sección responde al tema global: en claro usa fondo claro y tarjeta
- * blanca; en oscuro recupera su gradiente original (html[data-theme="dark"]
- * en style.css).
+ * Formulario de suscripción que guarda el email en localStorage:
+ *   - Al entrar se precarga el email guardado en el campo.
+ *   - Al enviar se guarda y se muestra el panel de éxito con un pequeño fundido
+ *     (estado `fading`).
+ * La sección sigue el tema global: en claro usa fondo claro y tarjeta blanca;
+ * en oscuro recupera su gradiente (html[data-theme="dark"] en style.css).
  *
- * readSavedEmail es una función independiente del componente y se pasa a
- * useState como inicializador perezoso (solo corre una vez, no en cada render).
- * El try/catch evita romper la app si localStorage no está disponible (SSR).
+ * readSavedEmail vive fuera del componente y se pasa a useState como
+ * inicializador perezoso, así solo se ejecuta una vez. El try/catch evita
+ * romper la app si el almacenamiento no está disponible.
  */
 
 import { useEffect, useState } from "react";
 import { NEWSLETTER_STORAGE_KEY } from "../utils/constants";
 
-// Lee el email guardado (vacío si nunca hubo o si el almacenamiento no existe).
+// Devuelve el email guardado; vacío si nunca hubo o si no hay almacenamiento.
 function readSavedEmail() {
   try {
     return localStorage.getItem(NEWSLETTER_STORAGE_KEY) || "";
@@ -27,19 +26,19 @@ function readSavedEmail() {
 }
 
 export default function NewsletterPage() {
-  // Email escrito en el input (precargado con el guardado).
+  // El email que se escribe en el campo (arranca con el guardado).
   const [email, setEmail] = useState(readSavedEmail);
-  // Email suscrito tras el envío; null mientras no se haya enviado nada.
+  // Email ya suscrito tras enviar; null mientras no se haya enviado.
   const [subscribedEmail, setSubscribedEmail] = useState(null);
-  // Controla el fundido (fade) entre formulario y pantalla de éxito.
+  // Controla el fundido entre el formulario y el panel de éxito.
   const [fading, setFading] = useState(false);
 
-  // Título de pestaña específico de esta página.
+  // Título de la pestaña para esta página.
   useEffect(() => {
     document.title = "// Newsletter — Coffee-End";
   }, []);
 
-  // Envío: guarda en localStorage, funde el formulario y muestra el éxito.
+  // Al enviar: guarda el email, funde el formulario y enseña el éxito.
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -48,7 +47,7 @@ export default function NewsletterPage() {
 
     localStorage.setItem(NEWSLETTER_STORAGE_KEY, emailValue);
 
-    // Fade-out (250 ms) → intercambio de paneles → fade-in del estado de éxito.
+    // Primero se desvanece (250 ms) y luego se cambia el panel hacia el de éxito.
     setFading(true);
     window.setTimeout(() => {
       setSubscribedEmail(emailValue);
@@ -56,14 +55,14 @@ export default function NewsletterPage() {
     }, 250);
   }
 
-  // "Suscribir otra dirección": vacía estado y email guardado para reintentar.
+  // "Suscribir otra dirección": limpia todo para empezar de nuevo.
   function handleReset() {
     setEmail("");
     setSubscribedEmail(null);
     setFading(false);
   }
 
-  // Muestra por turnos formulario o panel de éxito según subscribedEmail.
+  // Alterna formulario y panel de éxito según si ya hay un email suscrito.
   const formClassName = `flex flex-col gap-6${subscribedEmail ? " display-none" : ""}`;
   const successClassName = `newsletter-centrada__exito${subscribedEmail ? " display-flex" : " display-none"}`;
 
@@ -80,7 +79,7 @@ export default function NewsletterPage() {
             </p>
 
             <div className="newsletter-centrada__tarjeta">
-              {/* FORMULARIO DE SUSCRIPCIÓN: email + checkbox de privacidad. */}
+              {/* Formulario: campo de email y casilla de privacidad. */}
               <form
                 id="newsletter-form"
                 className={formClassName}
@@ -116,8 +115,8 @@ export default function NewsletterPage() {
                     <a
                       href="#"
                       onClick={() => {
-                        // Enlace sin destino en el original; se mantiene el alert
-                        // para no añadir una página inexistente.
+                        // Este enlace no lleva a ninguna parte; se avisa con un mensaje
+                        // para no inventar una página inexistente.
                         alert("Política de privacidad offline de Coffee-End.");
                         return false;
                       }}
@@ -139,7 +138,7 @@ export default function NewsletterPage() {
                 </div>
               </form>
 
-              {/* PANEL DE ÉXITO: visible solo tras un envío válido. */}
+              {/* Panel de éxito: solo se ve tras un envío correcto. */}
               <div
                 id="newsletter-success"
                 className={successClassName}

@@ -1,25 +1,25 @@
 /**
  * FaqAccordion.jsx — Acordeón de preguntas frecuentes.
  *
- * Porta la lógica de window.toggleFaq() de js/app.js del estático:
- *   - solo un ítem abierto a la vez (cerrar el resto al abrir otro)
- *   - animación de apertura mediante la transición CSS de max-height
+ * Comportamiento:
+ *   - solo una respuesta abierta a la vez (al abrir una, se cierran las demás)
+ *   - la apertura se anima con la transición CSS de max-height
  *
- * El estático medía scrollHeight para fijar max-height en px; aquí se hace lo
- * mismo desde React: tras cada cambio de openIndex se mide el body real.
+ * Para conseguirlo, tras cambiar la pregunta abierta se mide la altura real del
+ * cuerpo (scrollHeight) y se aplica en píxeles.
  */
 
 import { useEffect, useRef, useState } from "react";
 
 export default function FaqAccordion({ items }) {
-  // -1 = ninguno abierto. Guarda solo el índice del ítem abierto actual.
+  // -1 indica que ninguna respuesta está abierta; aquí vive el índice de la abierta.
   const [openIndex, setOpenIndex] = useState(-1);
 
-  // Refs a los .faq-body para poder leer su scrollHeight (altura de contenido).
+  // Referencias a cada cuerpo de respuesta, para poder medir su altura.
   const bodyRefs = useRef([]);
 
-  // Sincroniza el maxHeight inline con el estado abierto/contenido real:
-  // "0px" cerrado, scrollHeight+"px" abierto (permite la transición CSS 0.3s).
+  // Ajusta la altura de cada cuerpo según el estado: 0px si está cerrado o su
+  // altura real si está abierto (así la transición CSS se ve suave).
   useEffect(() => {
     bodyRefs.current.forEach((body, index) => {
       if (!body) return;
@@ -28,7 +28,7 @@ export default function FaqAccordion({ items }) {
     });
   }, [openIndex]);
 
-  // Toggle: si se pulsa el item abierto se cierra; si no, se abre ese y los demás se cierran.
+  // Al pulsar una respuesta abierta se cierra; al pulsar otra, se abre esa y se cierra la anterior.
   function handleToggle(index) {
     setOpenIndex((prev) => (prev === index ? -1 : index));
   }
@@ -46,12 +46,12 @@ export default function FaqAccordion({ items }) {
             onClick={() => handleToggle(index)}
           >
             <span className="faq-question">{item.q}</span>
-            {/* Icono de estado: − si está abierto, + si está cerrado. */}
+            {/* El icono cambia: − si está abierta, + si está cerrada. */}
             <span className="faq-toggle-icon">
               {openIndex === index ? "−" : "+"}
             </span>
           </button>
-          {/* Ref capturada por posición para medir cada cuerpo al abrir/cerrar. */}
+          {/* Cada referencia se guarda por posición para medir su respuesta al abrir o cerrar. */}
           <div
             className="faq-body"
             ref={(el) => (bodyRefs.current[index] = el)}

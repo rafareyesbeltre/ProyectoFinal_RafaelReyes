@@ -1,10 +1,10 @@
 /**
  * BookmarksProvider.jsx — Proveedor del estado global de favoritos.
  *
- * Gestiona la lista de artículos marcados (🔖/⭐)
- *   - carga inicial desde localStorage
- *   - persistencia automática en cada cambio
- *   - toggles para los marcadores de tarjetas y del artículo destacado
+ * Lleva la lista de artículos marcados (🔖/⭐):
+ *   - la carga al inicio desde localStorage
+ *   - la guarda automáticamente con cada cambio
+ *   - los interruptores de las tarjetas y del artículo destacado
  */
 
 import { useCallback, useEffect, useState } from "react";
@@ -12,9 +12,9 @@ import { BOOKMARKS_STORAGE_KEY, FEATURED_ARTICLE_ID } from "../utils/constants";
 import { BookmarksContext } from "./BookmarksContext";
 
 /**
- * Lee los favoritos persistidos. Se usa como inicializador perezoso de
- * useState, así que solo se ejecuta la primera vez que se monta el proveedor.
- * Devuelve un array vacío si no hay datos o si el JSON está corrupto.
+ * Lee los favoritos guardados. Solo corre la primera vez que se monta el
+ * proveedor (inicializador perezoso de useState) y, si no hay datos o el
+ * JSON está dañado, devuelve una lista vacía.
  */
 function loadBookmarks() {
   try {
@@ -27,11 +27,11 @@ function loadBookmarks() {
 }
 
 export default function BookmarksProvider({ children }) {
-  // Inicializa el estado con el valor ya persistido en el navegador del usuario.
+  // El estado arranca con lo que el usuario ya tenía guardado en el navegador.
   const [bookmarkedIds, setBookmarkedIds] = useState(loadBookmarks);
 
-  // Efecto de sincronización: cada vez que cambia la lista se guarda en
-  // localStorage (arquitectura offline-first, igual que el proyecto original).
+  // Cada vez que cambia la lista se vuelve a guardar en localStorage, así los
+  // marcadores sobreviven al cerrar la página.
   useEffect(() => {
     try {
       localStorage.setItem(
@@ -43,24 +43,21 @@ export default function BookmarksProvider({ children }) {
     }
   }, [bookmarkedIds]);
 
-  /**
-   * Añade o elimina un id de la lista según ya exista (toggle real).
-   * useCallback con dependencias vacías mantiene la referencia estable entre
-   * renders y evita re-renders innecesarios en los consumidores.
-   */
+  // Añade o quita un id de la lista según ya exista. useCallback deja la
+  // función estable para evitar repintados innecesarios.
   const toggleBookmark = useCallback((id) => {
     setBookmarkedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   }, []);
 
-  // Devuelve true si un artículo concreto está marcado.
+  // Dice si un artículo concreto está marcado.
   const isBookmarked = useCallback(
     (id) => bookmarkedIds.includes(id),
     [bookmarkedIds],
   );
 
-  // Atajo para el artículo destacado, que tiene su propio botón en la home.
+  // Atajo para el artículo destacado, que tiene botón propio en la página principal.
   const isFeaturedBookmarked = bookmarkedIds.includes(FEATURED_ARTICLE_ID);
 
   return (

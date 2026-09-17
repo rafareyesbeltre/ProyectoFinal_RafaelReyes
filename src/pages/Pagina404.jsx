@@ -1,16 +1,16 @@
 /**
- * Pagina404.jsx — Página de error "a la carta" (catch-all "*").
+ * Pagina404.jsx — Página de error (ruta comodín "*").
  *
  * Se muestra para cualquier ruta que no coincida con las definidas en App.jsx.
- * Comparte el mismo estilo que el bloque "artículo no encontrado" de
- * DetallePage para mantener coherencia visual en los fallos de navegación.
+ * Comparte el estilo del bloque "artículo no encontrado" de DetallePage para
+ * que los fallos de navegación se vean iguales.
  */
 
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export default function Pagina404() {
-  // Título de pestaña específico para esta página de error.
+  // Título de la pestaña para esta página.
   useEffect(() => {
     document.title = "404 — Coffee-End";
   }, []);

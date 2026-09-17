@@ -1,19 +1,19 @@
 /**
- * DetallePage.jsx — Página de detalle de un artículo "blog.html?id=...".
+ * DetallePage.jsx — Página de detalle de un artículo.
  *
- * Además de renderizar el artículo, esta página es el "banco de pruebas" de
- * varios temas de la rúbrica:
- *   - Tema 3 (arrays en estado): los comentarios se guardan en estado; añadir
- *     usa spread y eliminar usa .filter().
- *   - Tema 4 (lifting state up + separación): CommentsSection es presentacional
- *     y recibe onAddComment/onDeleteComment como callbacks desde aquí.
+ * Además de mostrar el artículo, esta página sirve de escaparate de varios
+ * temas del curso:
+ *   - Tema 3 (arrays en estado): los comentarios viven en estado; añadir usa
+ *     spread y borrar usa .filter().
+ *   - Tema 4 (lifting state up): CommentsSection solo presenta y recibe
+ *     onAddComment/onDeleteComment para avisar a la página.
  *   - Tema 5 (3 estados + useEffect): el artículo se carga con useFetch sobre
  *     mockApi → cargando (skeleton) / error (reintento) / datos (o no encontrado).
- *   - Tema 6 (useCallback justificado): los handlers de comentarios son estables
- *     por identidad para que React.memo de CommentsSection evite re-renders.
+ *   - Tema 6 (useCallback justificado): los handlers de comentarios guardan la
+ *     identidad para que React.memo de CommentsSection evite repintados.
  *
- * Los comentarios persisten por artículo en localStorage (coffee_end_comments_<id>)
- * mediante useLocalStorageState.
+ * Los comentarios se guardan por artículo en localStorage
+ * (coffee_end_comments_<id>) mediante useLocalStorageState.
  */
 
 import { useCallback, useEffect } from "react";
@@ -28,22 +28,21 @@ import { getCategoryBadgeStyle, getTagInfo } from "../utils/articleUtils";
 import CommentsSection from "../components/CommentsSection";
 
 export default function DetallePage() {
-  // id de la URL: /blog/:id. Ej. /blog/nuevo-paradigma-coffee-end.
+  // El id de la URL (p. ej. /blog/nuevo-paradigma-coffee-end).
   const { id } = useParams();
 
-  // Carga asíncrona del artículo + 3 recomendados ([] de deps relanza con id).
+  // Carga el artículo y 3 recomendados; vuelve a cargar si cambia el id.
   const { data, loading, error, refetch } = useFetch(() => fetchArticleDetail(id), [id]);
   const article = data ? data.article : null;
   const recommendations = data ? data.recommendations : [];
 
-  // Comentarios del artículo: estado sincronizado con localStorage. El valor
-  // inicial son 2 comentarios semilla (solo si no hay nada guardado todavía).
+  // Comentarios del artículo, guardados en localStorage. Si todavía no hay
+  // nada, se parte de 2 comentarios de ejemplo.
   const [comments, setComments] = useLocalStorageState(`${COMMENTS_STORAGE_PREFIX}${id}`, () =>
     buildSeedComments(id)
   );
 
-  // --- Operaciones sobre el array de comentarios (Tema 3) -----------------
-  // Añadir: se crea un comentario nuevo y se antepone al array (spread).
+  // Añadir: crea el comentario y lo coloca al principio de la lista.
   const onAddComment = useCallback(
     (text) => {
       const nuevo = {
@@ -57,7 +56,7 @@ export default function DetallePage() {
     [id, setComments]
   );
 
-  // Eliminar: .filter() conserva todo menos el id borrado (operación requerida).
+  // Borrar: .filter() deja fuera el comentario que se quiere quitar.
   const onDeleteComment = useCallback(
     (commentId) => {
       setComments((prev) => prev.filter((comment) => comment.id !== commentId));
@@ -65,16 +64,16 @@ export default function DetallePage() {
     [setComments]
   );
 
-  // Scroll-spy del menú lateral (0 secciones si aún no hay artículo cargado).
+  // El índice lateral sigue el scroll (0 secciones mientras no haya artículo).
   useScrollSpy(article ? article.sections.length : 0);
 
-  // Al entrar o cambiar de artículo: scroll arriba + título de pestaña.
+  // Al entrar o cambiar de artículo: sube arriba y actualiza el título de la pestaña.
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = article ? `${article.title} — Coffee-End` : "Cargando artículo — Coffee-End";
   }, [id, article]);
 
-  // --- ESTADO DE CARGA (Tema 5): skeleton mientras llegan los datos. ------
+  // Estado de carga (Tema 5): tarjetas vacías mientras llegan los datos.
   if (loading) {
     return (
       <main className="articulo-main-cnt">
@@ -87,7 +86,7 @@ export default function DetallePage() {
     );
   }
 
-  // --- ESTADO DE ERROR: caja con reintento (refetch). ----------------------
+  // Estado de error: caja con opción de reintentar.
   if (error) {
     return (
       <main className="articulo-main-cnt">
@@ -104,7 +103,7 @@ export default function DetallePage() {
     );
   }
 
-  // --- DATOS: artículo inexistente → estado "no encontrado", con retorno. ---
+  // Si el artículo no existe, se muestra el estado "no encontrado".
   if (!article) {
     return (
       <main>
@@ -123,12 +122,12 @@ export default function DetallePage() {
     );
   }
 
-  // Estilo inline del badge de categoría (colores CSS/HTML/JS del estático).
+  // Colores para la etiqueta de categoría (se aplican inline).
   const badgeStyle = getCategoryBadgeStyle(article.category);
 
   return (
     <main className="articulo-main-cnt">
-      {/* MIGA DE PAN: breadcrumb de navegación interna. */}
+      {/* Ruta de navegación (migas de pan) para ubicar al lector. */}
       <div className="container articulo-breadcrumb-container">
         <div className="articulo-breadcrumb-row">
           <Link to="/" className="articulo-breadcrumb-link">
@@ -139,7 +138,7 @@ export default function DetallePage() {
         </div>
       </div>
 
-      {/* HERO DEL ARTÍCULO: category, autor, fecha, lectura y portada. */}
+      {/* Cabecera del artículo: etiqueta, autor, fecha, tiempo de lectura y portada. */}
       <section className="articulo-detail-hero-sec">
         <div className="container">
           <div className="articulo-detail-meta-row">
@@ -162,9 +161,9 @@ export default function DetallePage() {
         </div>
       </section>
 
-      {/* CONTENIDO: columna izquierda = índice con scroll-spy; derecha = texto.
-          Los <span id="anchor-N"> son los marcadores sobre los que salta el
-          índice (scroll-behavior smooth del CSS). */}
+      {/* Contenido: a la izquierda el índice que sigue el scroll; a la derecha
+          el texto. Los <span id="anchor-N"> son los puntos a los que salta el
+          índice (con scroll suave del CSS). */}
       <section className="articulo-content-section">
         <div className="container">
           <div className="wrapper-article">
@@ -189,15 +188,15 @@ export default function DetallePage() {
                         {sec.title}
                         <span id={`anchor-${index}`} className="anchor-span" />
                       </h2>
-                      {/* El contenido del artículo proviene de los datos locales
-                          del proyecto (HTML propio), no de entrada de usuario. */}
+                      {/* El contenido sale de los datos locales del proyecto (HTML propio), no de
+                          textos escritos por el usuario. */}
                       <div dangerouslySetInnerHTML={{ __html: sec.content }} />
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* CTA final: enlaces reales a las páginas de la SPA. */}
+              {/* Cierre: enlaces a la comunidad y al newsletter. */}
               <div className="articulo-cta-card">
                 <div className="emoji-heading-big">💡</div>
                 <h4 className="articulo-cta-card-heading">¿Te gustaría seguir aprendiendo sobre este tema?</h4>
@@ -215,14 +214,14 @@ export default function DetallePage() {
                 </div>
               </div>
 
-              {/* COMENTARIOS: hijo presentacional, callbacks desde el padre. */}
+              {/* Comentarios: la página les pasa los datos y las funciones. */}
               <CommentsSection comments={comments} onAddComment={onAddComment} onDeleteComment={onDeleteComment} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* RECOMENDADOS: previews de otros artículos + acceso al listado. */}
+      {/* Otros artículos sugeridos y acceso al listado completo. */}
       <section className="blog-preview-section" id="explora-blog">
         <div className="container">
           <div className="section-header">

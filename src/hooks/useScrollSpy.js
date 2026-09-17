@@ -1,38 +1,38 @@
 /**
- * useScrollSpy.js — Engine interactivo del menú lateral del artículo.
+ * useScrollSpy.js — El índice lateral del artículo, en acción.
  *
- *   - resalta el enlace del menú lateral que corresponde a la sección visible
- *   - hace scroll suave al hacer clic (con compensación por el header)
- *   - optimiza el scroll con requestAnimationFrame (una actualización por frame)
+ *   - resalta el enlace del menú que corresponde a la sección visible
+ *   - desplaza con suavidad al hacer clic (dejando margen para el header)
+ *   - aprovecha requestAnimationFrame para actualizar una vez por frame
  *
- * En React los listeners no se registran "por documento"; el hook consulta los
- * nodos .menu-lateral_link y .anchor-span (renderizados por DetallePage) y se
- * auto-limpia al desmontar o cambiar de artículo.
+ * En React los listeners no se registran "por documento": el hook localiza los
+ * nodos .menu-lateral_link y .anchor-span (los dibuja DetallePage) y se
+ * autolimpia al desmontar o cambiar de artículo.
  */
 
 import { useEffect } from "react";
 
-// Margen superior (px) para decidir qué enlace está activo durante el scroll.
+// Cuánto se baja del tope para decidir qué enlace está activo al hacer scroll.
 const SCROLL_OFFSET = 180;
-// Compensación del header al hacer scroll suave con clic (100px del estático).
+// Margen para que el header no tape el título al saltar con un clic.
 const CLICK_OFFSET = 100;
 
 /**
- * @param {number} sectionCount Número de secciones del artículo. Se usa como
- *   dependencia: si cambia el artículo, el engine se re-inicializa.
+ * @param {number} sectionCount — cuántas secciones tiene el artículo. Sirve de
+ * dependencia: si cambia el artículo, el engine se reinicia.
  */
 export function useScrollSpy(sectionCount) {
   useEffect(() => {
-    // Los nodos ya existen: el efecto corre después del render del DOM.
+    // Los nodos ya están en el DOM cuando corre el efecto.
     const links = Array.from(document.querySelectorAll(".menu-lateral_link"));
     const anchors = Array.from(document.querySelectorAll(".anchor-span"));
 
-    // Sin menú ni anchors (p. ej. artículo no encontrado), no hay nada que vigilar.
+    // Si no hay menú ni anclas (p. ej. artículo no encontrado), no hay nada que vigilar.
     if (!links.length || !anchors.length) return;
 
     /**
-     * Índice activo: la última sección cuyo top esté por encima de
-     * scrollY - SCROLL_OFFSET. Empieza en 0 (primera sección).
+     * El índice activo es la última sección cuyo tope ya quedó por encima de
+     * scrollY - SCROLL_OFFSET. Empieza en 0 (la primera sección).
      */
     function getActiveIndex() {
       const scrollY = window.scrollY;
@@ -48,7 +48,7 @@ export function useScrollSpy(sectionCount) {
       return activeIndex;
     }
 
-    // Aplica la clase CSS --active solo al enlace correspondiente.
+    // Marca con la clase --active solo el enlace correspondiente.
     function updateMenu() {
       const activeIndex = getActiveIndex();
 
@@ -61,7 +61,7 @@ export function useScrollSpy(sectionCount) {
       });
     }
 
-    // Scroll suave al clic, compensando la altura del navbar superior.
+    // Al hacer clic, baja suave hasta el título dejando espacio para el header.
     function handleLinkClick(event, index) {
       event.preventDefault();
 
@@ -72,16 +72,16 @@ export function useScrollSpy(sectionCount) {
       window.scrollTo({ top, behavior: "smooth" });
     }
 
-    // Se guarda la referencia de cada handler para poder quitarlo en el
-    // cleanup (removeEventListener exige la misma función que se registró).
+    // Se guarda cada listener para poder quitarlo después (addEventListener y
+    // removeEventListener necesitan la misma función).
     const linkHandlers = links.map((link, index) => {
       const handler = (event) => handleLinkClick(event, index);
       link.addEventListener("click", handler);
       return { link, handler };
     });
 
-    // Throttling del evento scroll: solo se actualiza una vez por frame
-    // (requestAnimationFrame), evitando trabajo redundante en scrolls largos.
+    // El scroll solo se procesa una vez por frame, así no se trabaja de más
+    // al bajar rápido por una página larga.
     let ticking = false;
     function handleScroll() {
       if (!ticking) {
@@ -96,7 +96,7 @@ export function useScrollSpy(sectionCount) {
     window.addEventListener("scroll", handleScroll);
     updateMenu();
 
-    // Cleanup: se eliminan los listeners al desmontar o cambiar de artículo.
+    // Al final se quitan los listeners (al salir o cambiar de artículo).
     return () => {
       linkHandlers.forEach(({ link, handler }) => link.removeEventListener("click", handler));
       window.removeEventListener("scroll", handleScroll);

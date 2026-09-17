@@ -1,11 +1,10 @@
 /**
- * comments.js — Comentarios semilla de la sección "Comentarios".
+ * comments.js — Comentarios de ejemplo para la sección "Comentarios".
  *
- * buildSeedComments(articleId) devuelve 2 comentarios iniciales únicos por
- * artículo (los ids se prefijan con el id del artículo para no colisionar).
- * Es una función pura que simula el "primer contenido" que vería un usuario
- * antes de que añada los suyos; después la lista se gestiona en estado de
- * DetallePage y se persiste en localStorage.
+ * buildSeedComments(articleId) prepara 2 comentarios únicos por artículo (los
+ * ids llevan el id del artículo para no chocar). Es una función pura que
+ * simula el contenido previo; a partir de ahí la lista la gestiona
+ * DetallePage y se guarda en localStorage.
  */
 
 export function buildSeedComments(articleId) {

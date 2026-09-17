@@ -1,10 +1,8 @@
 /**
  * Footer.jsx — Pie de página compartido.
  *
- * Idéntico al de las plantillas estáticas (archive/blog/about...), pero los
- * enlaces del cursores del estático (alert()) se reemplazan por navegación
- * real de la SPA con <Link />. El footer sigue el tema global: su base es
- * oscura por diseño y en las páginas responde igual en todos los temas.
+ * Los enlaces del menú navegan por la SPA con <Link />. El pie es oscuro por
+ * diseño y acompaña al tema global en todas las páginas.
  */
 
 import { Link } from "react-router-dom";
@@ -14,7 +12,7 @@ export default function Footer() {
     <footer id="main-footer">
       <div className="footer-top">
         <div className="container footer-grid">
-          {/* Bloque de marca y texto institucional. */}
+          {/* Bloque con la marca y el texto institucional. */}
           <div className="footer-brand">
             <div className="logo">
               <div className="logo-icon">&lt;/&gt;</div>
@@ -31,15 +29,15 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Columna vacía reservada del grid estático (grid de 4 columnas). */}
+          {/* Columna vacía: el grid usa cuatro columnas y esta se queda libre. */}
           <div className="footer-col" />
 
-          {/* Columna "Blog": ahora conrutas reales en lugar de alert()es. */}
+          {/* Columna "Blog": enlaces a las secciones principales. */}
           <div className="footer-col">
             <h4>Blog</h4>
             <ul>
               <li>
-                {/* "Archives" se unifica con la lista del blog ("/"). */}
+                {/* "Archives" lleva a la lista de artículos de la página principal. */}
                 <Link to="/">Archives</Link>
               </li>
               <li>
@@ -51,7 +49,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Columna de contacto académico (enlaces directos mailto/tel). */}
+          {/* Columna de contacto: enlaces directos a email y teléfono. */}
           <div className="footer-col">
             <h4>Contacto Académico</h4>
             <ul>
@@ -71,7 +69,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Barra inferior de licencia y atribución. */}
+      {/* Barra inferior con la licencia y la atribución. */}
       <div className="footer-bottom">
         <div className="container">
           <span className="footer-bottom-text">

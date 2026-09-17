@@ -1,10 +1,8 @@
 /**
- * FeaturedCard.jsx — Banner del artículo destacado de la home.
+ * FeaturedCard.jsx — Banner del artículo destacado de la página principal.
  *
- * Porta la sección "featured-blog-section" de archive.html. Muestra el
- * artículo más reciente de la revista, con su propio botón de marcador
- * (distinto al de las tarjetas: usa FEATURED_ARTICLE_ID como id especial,
- * igual que toggleFeatBookmark() en el estático).
+ * Muestra el artículo más reciente, con su propio botón de marcador
+ * (distinto al de las tarjetas: usa FEATURED_ARTICLE_ID como id especial).
  *
  * @param {object} article — Entrada de ARTICLES_DATABASE[FEATURED_ARTICLE_ID].
  */
@@ -50,7 +48,7 @@ export default function FeaturedCard({ article }) {
         </p>
 
         <div className="featured-blog-actions-bar">
-          {/* Botón principal: lleva al detalle del artículo destacado. */}
+          {/* Botón principal que abre la ficha del artículo destacado. */}
           <Link
             to={`/blog/${FEATURED_ARTICLE_ID}`}
             className="btn btn-primary featured-blog-read-btn"
@@ -58,7 +56,7 @@ export default function FeaturedCard({ article }) {
             Leer Artículo Completo
           </Link>
 
-          {/* Marcador propio del destacado (updateFeaturedBookmarkUI() del estático). */}
+          {/* Marcador propio del banner: lo guarda para leerlo después. */}
           <button
             id="feat-bookmark-btn"
             type="button"

@@ -1,7 +1,5 @@
 /**
  * articles.js — Base de datos extendida de los artículos completos.
- *
- *
  */
 export const ARTICLES_DATABASE = {
   "featured_dom_asincrono": {

@@ -1,15 +1,14 @@
 /**
- * HomePage.jsx — Página principal "/" (antes archive.html).
+ * HomePage.jsx — Página principal ("/").
  *
  * Demuestra el Tema 5 (estados cargando/error/datos):
- *   - Los posts se cargan con useFetch sobre la API simulada mockApi.
- *   - loading → rejilla de tarjetas esqueleto (skeleton).
- *   - error   → caja de error con botón "Reintentar" (refetch).
+ *   - Los artículos se cargan con useFetch sobre la API simulada mockApi.
+ *   - loading → rejilla de tarjetas esqueleto.
+ *   - error   → caja de error con botón "Reintentar".
  *   - datos   → rejilla real de BlogCard + aviso si el filtro no da resultados.
  *
- * El filtro de categorías usa CategoryFilter (presentacional) como ejemplo de
- * lifting state up: el estado activeCategory vive AQUÍ y se pasa al hijo junto
- * con onSelect para actualizarlo.
+ * El filtro es un buen ejemplo de lifting state up: la categoría activa vive
+ * aquí y se pasa al hijo CategoryFilter junto con la función que la actualiza.
  */
 
 import { useMemo, useState } from "react";
@@ -22,25 +21,25 @@ import BlogCard from "../components/BlogCard";
 import FeaturedCard from "../components/FeaturedCard";
 import CategoryFilter from "../components/CategoryFilter";
 
-// Cuántas tarjetas esqueleto se muestran mientras se cargan los datos.
+// Cuántas tarjetas vacías se muestran mientras llegan los datos.
 const SKELETON_COUNT = 6;
 
 export default function HomePage() {
-  // Categoría activa del filtro (lifting state up: la gestiona el padre).
+  // Categoría del filtro elegida (el estado vive aquí, en la página).
   const [activeCategory, setActiveCategory] = useState("Todos");
 
-  // Carga asíncrona de los posts (mockApi). refetch alimenta "Reintentar".
+  // Los artículos se cargan con useFetch; refetch sirve para "Reintentar".
   const { data: posts, loading, error, refetch } = useFetch(fetchBlogPosts);
 
-  // Título de pestaña específico de esta página (SPA: index.html solo define uno).
+  // Título de la pestaña para esta página.
   useEffect(() => {
     document.title = "// Blog — Coffee-End";
   }, []);
 
-  // El destacado se lee directamente de la base de datos extendida por su id.
+  // El artículo destacado se toma de la base de datos por su id.
   const featured = ARTICLES_DATABASE[FEATURED_ARTICLE_ID];
 
-  // Filtrado memorizado: solo se recalcula cuando cambia la categoría o los datos.
+  // El filtrado solo se recalcula cuando cambia la categoría o los datos.
   const visiblePosts = useMemo(() => {
     if (!posts) return [];
     if (activeCategory === "Todos") return posts;
@@ -49,7 +48,7 @@ export default function HomePage() {
 
   return (
     <main>
-      {/* HERO: cabecera de bienvenida del blog (siempre visible). */}
+      {/* Cabecera de bienvenida del blog. */}
       <section className="hero blog-hero-sec" id="blog-hero">
         <div className="container">
           <h1 className="hero-title blog-hero-title">
@@ -62,14 +61,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ARTÍCULO DESTACADO: banner principal reutilizable. */}
+      {/* Banner del artículo destacado. */}
       <section className="featured-blog-section">
         <div className="container">
           <FeaturedCard article={featured} />
         </div>
       </section>
 
-      {/* FILTROS: hijo presentacional; el estado vive aquí (lifting up). */}
+      {/* Filtro: el componente no guarda estado; la página decide la categoría. */}
       <section className="filter-bar blog-search-bar-sec" id="blog-search-bar">
         <div className="container">
           <div className="blog-search-flex-row">
@@ -82,7 +81,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* REJILLA con los 3 estados de carga (renderizado condicional). */}
+      {/* Rejilla con los tres estados: cargando, error o datos. */}
       <section className="blog-grid-section">
         <div className="container">
           <div className="w-full">

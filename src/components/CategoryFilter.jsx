@@ -1,14 +1,13 @@
 /**
- * CategoryFilter.jsx — Componente PRESENTACIONAL del filtro de categorías.
+ * CategoryFilter.jsx — Filtro de categorías (solo presenta, no guarda estado).
  *
- * Recibe todo por props (no maneja estado interno):
- *   - categories:      lista {id, label} a pintar como botones.
- *   - activeCategory:  categoría seleccionada (decidida por el PADRE).
- *   - onSelect:        callback (lifting state up) que el padre usa para
- *                      actualizar su estado al pulsar un botón.
+ * Todo entra por props:
+ *   - categories:      lista {id, label} que se muestra como botones.
+ *   - activeCategory:  categoría elegida (la decide la página).
+ *   - onSelect:        función que avisa a la página al pulsar un botón.
  *
- * Es el ejemplo explícito de LIFTING STATE UP del Tema 4: el hijo no guarda
- * la categoría, la solicita recién de su padre, que es quien "levanta" el dato.
+ * Es el ejemplo de "lifting state up" del Tema 4: este componente no recuerda
+ * la categoría, se la pide al padre, que es quien conserva la elección.
  */
 export default function CategoryFilter({ categories, activeCategory, onSelect }) {
   return (
@@ -19,7 +18,7 @@ export default function CategoryFilter({ categories, activeCategory, onSelect })
           key={cat.id}
           type="button"
           className={`filter-btn filter-btn-padding${activeCategory === cat.id ? " active" : ""}`}
-          // Llama al callback del padre informándole de qué categoría se pulsó.
+          // Avisa a la página de que se eligió otra categoría.
           onClick={() => onSelect(cat.id)}
         >
           {cat.label}
