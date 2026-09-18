@@ -24,6 +24,7 @@
   --color-tertiary: #27272A;     /* Gris pizarra oscuro / Zinc */
   --color-accent: var(--color-primary);
   --color-success: #10b981;      /* Esmeralda */
+  --color-danger: #ef4444;       /* Rojo para avisos y cancelar */
   --color-dark: #111827;         /* Carbón */
   --color-dark-soft: var(--color-tertiary);
   --color-light: #f9fafb;        /* Blanco roto */
@@ -2682,4 +2683,393 @@ html[data-theme="dark"] .comment-item {
   flex-wrap: wrap;
   gap: 12px;
   justify-content: center;
+}
+
+/* =========================================================
+   24. MENTORÍAS: AGENDA CON RESERVAS EN LOCALSTORAGE (Sin API)
+   ========================================================= */
+
+/* ---------- Sección en dos columnas (formulario | agenda) ---------- */
+.community-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (min-width: 992px) {
+  .community-layout {
+    grid-template-columns: 2.3fr 1fr;
+  }
+}
+
+.booking-section {
+  padding: 40px 0 80px 0;
+  background-color: var(--color-light);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---------- Campos base del formulario ---------- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-dark-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--color-dark);
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  outline: none;
+  background-color: #ffffff;
+  transition: var(--transition-smooth);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ---------- Columna izquierda: formulario de reserva ---------- */
+.booking-card-left {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+}
+
+.booking-h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.booking-p {
+  font-size: 13.5px;
+  color: var(--color-muted);
+  margin-bottom: 24px;
+}
+
+/* Aviso de éxito o error: el color lo pone el componente según el caso. */
+.booking-feedback {
+  display: none;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: var(--radius-base);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.booking-flex-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.booking-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.booking-grid-row-unequal {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.booking-form-grp {
+  margin: 0;
+}
+
+.booking-label {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
+.booking-input-styled {
+  padding: 10px 14px;
+  font-size: 13.5px;
+  border-radius: var(--radius-base);
+  width: 100%;
+}
+
+.booking-textarea-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.char-counter-mono {
+  font-size: 11px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+}
+
+.booking-textarea-styled {
+  padding: 12px;
+  font-size: 13.5px;
+  border-radius: var(--radius-base);
+  min-height: 80px;
+  height: 95px;
+  max-height: 160px;
+  line-height: 1.5;
+  resize: vertical;
+  width: 100%;
+}
+
+.booking-submit-btn {
+  width: 100%;
+  border-radius: var(--radius-base);
+  padding: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ---------- Columna derecha: agenda de citas ---------- */
+.booking-card-right-agenda {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.015);
+  margin-bottom: 24px;
+}
+
+.booking-agenda-h3 {
+  font-family: var(--font-display);
+  font-size: 17.5px;
+  font-weight: 800;
+  color: var(--color-dark);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.booking-agenda-badge {
+  font-size: 11px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 2px 8px;
+  border-radius: var(--radius-lg);
+  font-weight: 700;
+}
+
+.booking-agenda-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 120px;
+}
+
+.booking-agenda-empty {
+  text-align: center;
+  padding: 30px 10px;
+  color: var(--color-muted);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-base);
+}
+
+.booking-agenda-empty__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 4px;
+}
+
+.booking-agenda-empty__text {
+  font-size: 12px;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+/* ---------- Ticket de cada cita agendada ---------- */
+.booking-ticket {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md-lg);
+  padding: 16px;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.booking-ticket__body {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 12px;
+}
+
+.booking-ticket__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.booking-ticket__status {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-success);
+  background: rgba(16, 185, 129, 0.08);
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.booking-ticket__time {
+  font-size: 11px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+}
+
+.booking-ticket__mentor {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 2px;
+}
+
+.booking-ticket__type {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-muted);
+  margin-bottom: 8px;
+}
+
+.booking-ticket__details {
+  font-size: 12px;
+  color: var(--color-dark-soft);
+  line-height: 1.4;
+  background: var(--color-light);
+  padding: 8px;
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.booking-ticket__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.booking-ticket__date {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.booking-ticket__actions {
+  display: flex;
+  gap: 6px;
+}
+
+.booking-ticket__room,
+.booking-ticket__cancel {
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.booking-ticket__room {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.booking-ticket__cancel {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.1);
+  color: var(--color-danger);
+}
+
+/* Aparición suave de los tickets. */
+.animate-scale-up {
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---------- Variante oscura de la sección ---------- */
+html[data-theme="dark"] .booking-section {
+  background-color: #0b0f1a;
+  border-top-color: #1f2937;
+}
+
+html[data-theme="dark"] .booking-card-left,
+html[data-theme="dark"] .booking-card-right-agenda,
+html[data-theme="dark"] .booking-ticket {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+html[data-theme="dark"] .booking-h3,
+html[data-theme="dark"] .booking-agenda-h3,
+html[data-theme="dark"] .booking-ticket__mentor,
+html[data-theme="dark"] .booking-agenda-empty__title {
+  color: #f9fafb;
+}
+
+html[data-theme="dark"] .booking-ticket__details {
+  background: #1f2937;
+  color: #d1d5db;
+}
+
+html[data-theme="dark"] .form-input,
+html[data-theme="dark"] .form-select,
+html[data-theme="dark"] .form-textarea {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #f9fafb;
 }

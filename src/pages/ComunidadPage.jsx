@@ -6,6 +6,7 @@
  */
 
 import { useEffect } from "react";
+import MentorBooking from "../components/MentorBooking";
 
 export default function ComunidadPage() {
 
@@ -80,6 +81,9 @@ export default function ComunidadPage() {
           </div>
         </div>
       </section>
+
+      {/* Agenda de mentorías: reserva y lista de citas guardadas en el navegador. */}
+      <MentorBooking />
     </main>
   );
 }

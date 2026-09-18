@@ -35,3 +35,63 @@ export const BLOG_CATEGORIES = [
   { id: "JS", label: "JavaScript" },
   { id: "Carrera", label: "Carrera & Soft Skills" },
 ];
+
+// Clave de localStorage donde se guardan las citas de mentorías.
+export const MENTORIAS_STORAGE_KEY = "devacademy_mentorship_bookings";
+
+// Instructores que aparecen en el selector del formulario.
+export const MENTOR_INSTRUCTORES = [
+  "Lucas Garmendia",
+  "Elena Caro",
+  "Sofía Domínguez",
+  "Carlos Pérez",
+];
+
+// Objetivos que se pueden elegir para la sesión. El valor corto se guarda en
+// la cita y la etiqueta es el texto que se lee en el formulario.
+export const MENTOR_OBJETIVOS = [
+  { value: "Revisión de Código Semántico", label: "Revisión de Código Semántico" },
+  { value: "Resolución de Consola & Bugs", label: "Resolución de Consola & Bugs (Debugging)" },
+  { value: "Disposición Flexbox / CSS Grid", label: "Diseño y Maquetación Flexbox / Grid" },
+  { value: "Orientación Profesional & Porfolio", label: "Estrategia Profesional & Portfolio" },
+];
+
+// Franjas de horario disponibles para la videollamada (hora de Ecuador).
+export const MENTOR_HORARIOS = [
+  { value: "09:00 - 09:45 ECT", label: "09:00 AM - 09:45 AM ECT" },
+  { value: "11:00 - 11:45 ECT", label: "11:00 AM - 11:45 AM ECT" },
+  { value: "13:30 - 14:15 ECT", label: "01:30 PM - 02:15 PM ECT" },
+  { value: "16:00 - 16:45 ECT", label: "04:00 PM - 04:45 PM ECT" },
+  { value: "18:15 - 19:00 ECT", label: "06:15 PM - 07:00 PM ECT" },
+];
+
+// Cita de ejemplo que aparece la primera vez, para que la agenda no arranque
+// vacía y se vea de inmediato cómo queda un ticket.
+export const DEFAULT_BOOKINGS = [
+  {
+    id: "booking_default_1",
+    name: "Alejandra Valera",
+    email: "alejandra@devacademy.edu",
+    mentor: "Lucas Garmendia",
+    type: "Resolución de Consola & Bugs",
+    date: "2026-06-12",
+    time: "11:00 - 11:45 ECT",
+    details:
+      "Tengo un problema asíncrono con fetch() donde el estado local se actualiza antes de completarse la consulta, causando undefined en bucles mapping.",
+    status: "Confirmada",
+    room: "https://meet.jit.si/devacademy-lucas-garmendia",
+  },
+];
+
+// Color de la línea de cada ticket según el instructor elegido.
+export const MENTOR_COLORS = {
+  "Lucas Garmendia": "var(--color-primary)",
+  "Elena Caro": "var(--color-secondary)",
+  "Sofía Domínguez": "var(--color-accent)",
+  "Carlos Pérez": "var(--color-muted)",
+};
+
+// Enlace de sala que se genera para cada instructor.
+export function buildRoomUrl(mentor) {
+  return `https://discord.gg/mzEmF8e7kU-${mentor.toLowerCase().replace(/ /g, "-")}`;
+}
