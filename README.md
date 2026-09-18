@@ -38,6 +38,6 @@ En cuanto al origen de los datos, el proyecto se resolvió como una **aplicació
 
 ## Autor y entrega
 
-Proyecto final del curso de React de **Talendig** (CTDS301), desarrollado por **Rafael Reyes**.
+Proyecto final del curso de React, desarrollado por **Rafael Reyes**.
 
 - Repositorio: [github.com/rafareyesbeltre/ProyectoFinal_RafaelReyes](https://github.com/rafareyesbeltre/ProyectoFinal_RafaelReyes)
