@@ -12,6 +12,7 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useTheme } from "../hooks/useTheme";
+import { DISCORD_INVITE_URL } from "../utils/constants";
 
 // Lista de enlaces; `end` indica si el enlace solo está activo con la ruta
 // exacta (necesario para "/").
@@ -75,8 +76,8 @@ export default function NavBar() {
           >
             {isDarkTheme ? "☀️" : "🌙"}
           </button>
-          {/* Botón de Discord (enlace externo de ejemplo). */}
-          <a href="#" className="btn btn-primary">
+          {/* Botón de Discord: abre la invitación al servidor en otra pestaña. */}
+          <a href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer" className="btn btn-primary">
             Discord
           </a>
         </div>

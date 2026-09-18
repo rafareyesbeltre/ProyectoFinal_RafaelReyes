@@ -7,6 +7,7 @@
 
 import { useEffect } from "react";
 import MentorBooking from "../components/MentorBooking";
+import { DISCORD_INVITE_URL } from "../utils/constants";
 
 export default function ComunidadPage() {
 
@@ -70,7 +71,7 @@ export default function ComunidadPage() {
               </div>
 
               {/* Acceso directo a Discord (se abre en una pestaña nueva). */}
-              <a href="https://discord.com" target="_blank" rel="noreferrer" className="comunidad-discord__enlace-unirse">
+              <a href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer" className="comunidad-discord__enlace-unirse">
                 💬 Ingresar al Servidor de Discord
               </a>
 

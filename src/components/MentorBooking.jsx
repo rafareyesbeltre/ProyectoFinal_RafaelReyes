@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import BookingForm from "./BookingForm";
 import BookingTicket from "./BookingTicket";
 import { useLocalStorageState } from "../hooks/useLocalStorage";
-import { DEFAULT_BOOKINGS, MENTORIAS_STORAGE_KEY, buildRoomUrl } from "../utils/constants";
+import { DEFAULT_BOOKINGS, MENTORIAS_STORAGE_KEY } from "../utils/constants";
 
 // Campos vacíos con los que arranca el formulario.
 const EMPTY_FORM = {
@@ -109,7 +109,6 @@ export default function MentorBooking() {
       time,
       details,
       status: "Confirmada",
-      room: buildRoomUrl(mentor),
     };
 
     // Se añade la nueva cita al final de la lista.

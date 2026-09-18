@@ -4,13 +4,13 @@
  * Solo pinta los datos que recibe y avisa al padre cuando se pulsa "Cancelar".
  */
 
-import { MENTOR_COLORS, buildRoomUrl } from "../utils/constants";
+import { DISCORD_INVITE_URL, MENTOR_COLORS } from "../utils/constants";
 
 export default function BookingTicket({ booking, onCancel }) {
   // Cada instructor tiene su color de línea; si no lo conocemos, usamos el primario.
   const colorLine = MENTOR_COLORS[booking.mentor] || "var(--color-primary)";
-  // Sala guardada o, si no hay, una generada a partir del nombre del instructor.
-  const roomUrl = booking.room || buildRoomUrl(booking.mentor);
+  // Todas las sesiones se abren en el mismo servidor de Discord.
+  const roomUrl = DISCORD_INVITE_URL;
 
   return (
     <div className="booking-ticket animate-scale-up">

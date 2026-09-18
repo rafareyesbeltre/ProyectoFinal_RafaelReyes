@@ -23,6 +23,9 @@ export const COMMENTS_STORAGE_PREFIX = "coffee_end_comments_";
 // Sirve para mostrar el estado de error del Tema 5 y se limpia al reintentar.
 export const MOCK_ERROR_KEY = "coffee_end_mock_error";
 
+// Enlace único de Discord que usan los botones e invitaciones de la app.
+export const DISCORD_INVITE_URL = "https://discord.gg/Ezf3Cj8UQC";
+
 // ID del artículo que aparece como destacado en la página principal.
 export const FEATURED_ARTICLE_ID = "featured_dom_asincrono";
 
@@ -79,7 +82,6 @@ export const DEFAULT_BOOKINGS = [
     details:
       "Tengo un problema asíncrono con fetch() donde el estado local se actualiza antes de completarse la consulta, causando undefined en bucles mapping.",
     status: "Confirmada",
-    room: "https://meet.jit.si/devacademy-lucas-garmendia",
   },
 ];
 
@@ -90,8 +92,3 @@ export const MENTOR_COLORS = {
   "Sofía Domínguez": "var(--color-accent)",
   "Carlos Pérez": "var(--color-muted)",
 };
-
-// Enlace de sala que se genera para cada instructor.
-export function buildRoomUrl(mentor) {
-  return `https://discord.gg/mzEmF8e7kU-${mentor.toLowerCase().replace(/ /g, "-")}`;
-}
